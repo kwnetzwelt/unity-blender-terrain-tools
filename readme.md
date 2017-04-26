@@ -45,9 +45,10 @@ This tool traces a references GameObject by shooting a series of rays down on it
 #### Blender Python Script `flatten_mesh.pyblend`
 
 This can be used to split a smooth mesh with a vertex color channel into a flat shaded and still nicely colored mesh.
+This script is an operator. Open the script in blender and hit "run script" only then you can select the operator via the "Spacebar"-Menu. 
 
 #### Blender Python Script `split_terrain_2.pyblend`
 
 This can be used to split a huge mesh into separate chunks to allow for view frustum culling and to avoid hitting the 65k vertices limit within unity.
-
+This script is an operator. Open the script in blender and hit "run script" only then you can select the operator via the "Spacebar"-Menu. 
 
