@@ -1,0 +1,177 @@
+fileFormatVersion: 2
+guid: 1e8f84ba2ed4de04c9e65ce142d05c80
+timeCreated: 1493237165
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Landscape_001_0
+    100004: Landscape_001_1
+    100006: Landscape_001_10
+    100008: Landscape_001_11
+    100010: Landscape_001_12
+    100012: Landscape_001_13
+    100014: Landscape_001_14
+    100016: Landscape_001_15
+    100018: Landscape_001_2
+    100020: Landscape_001_3
+    100022: Landscape_001_4
+    100024: Landscape_001_5
+    100026: Landscape_001_6
+    100028: Landscape_001_7
+    100030: Landscape_001_8
+    100032: Landscape_001_9
+    400000: //RootNode
+    400002: Landscape_001_0
+    400004: Landscape_001_1
+    400006: Landscape_001_10
+    400008: Landscape_001_11
+    400010: Landscape_001_12
+    400012: Landscape_001_13
+    400014: Landscape_001_14
+    400016: Landscape_001_15
+    400018: Landscape_001_2
+    400020: Landscape_001_3
+    400022: Landscape_001_4
+    400024: Landscape_001_5
+    400026: Landscape_001_6
+    400028: Landscape_001_7
+    400030: Landscape_001_8
+    400032: Landscape_001_9
+    2300000: Landscape_001_0
+    2300002: Landscape_001_1
+    2300004: Landscape_001_10
+    2300006: Landscape_001_11
+    2300008: Landscape_001_12
+    2300010: Landscape_001_13
+    2300012: Landscape_001_14
+    2300014: Landscape_001_15
+    2300016: Landscape_001_2
+    2300018: Landscape_001_3
+    2300020: Landscape_001_4
+    2300022: Landscape_001_5
+    2300024: Landscape_001_6
+    2300026: Landscape_001_7
+    2300028: Landscape_001_8
+    2300030: Landscape_001_9
+    3300000: Landscape_001_0
+    3300002: Landscape_001_1
+    3300004: Landscape_001_10
+    3300006: Landscape_001_11
+    3300008: Landscape_001_12
+    3300010: Landscape_001_13
+    3300012: Landscape_001_14
+    3300014: Landscape_001_15
+    3300016: Landscape_001_2
+    3300018: Landscape_001_3
+    3300020: Landscape_001_4
+    3300022: Landscape_001_5
+    3300024: Landscape_001_6
+    3300026: Landscape_001_7
+    3300028: Landscape_001_8
+    3300030: Landscape_001_9
+    4300000: Landscape_001_15
+    4300002: Landscape_001_14
+    4300004: Landscape_001_13
+    4300006: Landscape_001_12
+    4300008: Landscape_001_11
+    4300010: Landscape_001_10
+    4300012: Landscape_001_9
+    4300014: Landscape_001_8
+    4300016: Landscape_001_7
+    4300018: Landscape_001_6
+    4300020: Landscape_001_5
+    4300022: Landscape_001_4
+    4300024: Landscape_001_3
+    4300026: Landscape_001_2
+    4300028: Landscape_001_1
+    4300030: Landscape_001_0
+    6400000: Landscape_001_0
+    6400002: Landscape_001_1
+    6400004: Landscape_001_10
+    6400006: Landscape_001_11
+    6400008: Landscape_001_12
+    6400010: Landscape_001_13
+    6400012: Landscape_001_14
+    6400014: Landscape_001_15
+    6400016: Landscape_001_2
+    6400018: Landscape_001_3
+    6400020: Landscape_001_4
+    6400022: Landscape_001_5
+    6400024: Landscape_001_6
+    6400026: Landscape_001_7
+    6400028: Landscape_001_8
+    6400030: Landscape_001_9
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 0
+    keepQuads: 0
+    weldVertices: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

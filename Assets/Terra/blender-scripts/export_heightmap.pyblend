@@ -1,0 +1,51 @@
+import bpy
+from math import *
+from mathutils import *
+import sys
+
+def GetPosition(x,y,resolution,o):
+    dimensions = Vector(o.dimensions)
+    
+    dimensions.x = dimensions.x * x/resolution
+    dimensions.y = dimensions.y * y/resolution
+
+    return (dimensions + (-o.dimensions * 0.5)) * o.matrix_local
+    
+
+resolution = 1024
+o = bpy.context.selected_objects[0]
+fileName = bpy.path.basename(bpy.data.filepath)
+fileNameLength = len(fileName)
+baseDir = bpy.data.filepath[0:(len(bpy.data.filepath)-fileNameLength)]
+outValues = []
+minimum = sys.float_info.max
+maximum = sys.float_info.min
+
+for x in range(resolution):
+    for y in range(resolution):
+        start = GetPosition(x,y,resolution,o)
+        start += Vector((0,0,1))
+        
+        end = Vector(start)
+        end += Vector((0,0,-1000))
+        hit = o.ray_cast(start,end)
+        hitWorld = hit[0] * o.matrix_world
+        outValues.append(hitWorld.z)
+        minimum = min(minimum,hitWorld.z)
+        maximum = max(maximum,hitWorld.z)
+
+print("writing to : " + baseDir )
+f=open(baseDir+"/heightmap.txt","w")
+print(maximum,minimum)
+f.writelines(str(resolution)+"\n")
+
+start = GetPosition(0,0,resolution,o)
+
+f.writelines(str((0-minimum)/(maximum-minimum))+"\n")
+for i in outValues:
+    i = i-minimum
+    i = i/(maximum-minimum)
+    f.writelines(str(i)+"\n")
+
+
+f.close()

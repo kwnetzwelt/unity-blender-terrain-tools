@@ -1,0 +1,193 @@
+import bpy
+from math import *
+from mathutils import *
+from collections import deque
+import sys
+
+class TerrainSplit(bpy.types.Operator):
+    bl_idname = "object.terrain_split"
+    bl_label = "Split Terrain"
+    bl_options = {"REGISTER", "UNDO"}
+    
+    resolution = bpy.props.IntProperty(name="Resolution",default=4)
+     
+    def GetPosition(self,x,y, source_dimensions):
+        dimensions = Vector(source_dimensions)
+        
+        dimensions.x = dimensions.x * x/self.resolution
+        dimensions.y = dimensions.y * y/self.resolution
+
+        return (dimensions + (-source_dimensions * 0.5))
+
+    """
+    creates the given amount of objects at the given location with the given name. returns an array of the created objects. 
+    """
+    def createTargetObjects(location, name, count):
+        objects = deque()
+        for i in range(count):
+            bpy.ops.object.add(type="MESH")
+            createdObject = bpy.context.object
+            createdObject.location = location
+            createdObject.name = name + "_" + str(i)
+            objects.append(createdObject)
+        return objects
+
+    def checkBounds(self,location, lowerLimit, upperLimit, axismask):
+        inside = True
+        if axismask[0] == 1:
+            inside = inside and (lowerLimit.x <= location.x)
+            inside = inside and (upperLimit.x >= location.x)
+        if axismask[1] == 1:
+            inside = inside and (lowerLimit.y <= location.y)
+            inside = inside and (upperLimit.y >= location.y)
+        if axismask[2] == 1:
+            inside = inside and (lowerLimit.z <= location.z)
+            inside = inside and (upperLimit.z >= location.z)
+        return inside        
+
+    def duplicateObject(self,name, copyobj):
+     
+        # Create new mesh
+        mesh = bpy.data.meshes.new(name)
+     
+        # Create new object associated with the mesh
+        ob_new = bpy.data.objects.new(name, mesh)
+     
+        # Copy data block from the old object into the new object
+        ob_new.data = copyobj.data.copy()
+        ob_new.scale = copyobj.scale
+        ob_new.location = copyobj.location
+     
+        # Link new object to the given scene and select it
+        bpy.context.scene.objects.link(ob_new)
+     
+        return ob_new
+
+    """
+    Returns the index of the object where the given location should be registered for the given resolution
+    """
+    def getTargetObjectIndexForLocation(self,source_location, source_dimensions, location,resolution):
+        dimStep = source_dimensions * (1/ float(resolution))
+        #print("looking for index on: ", location)
+        for x in range(0,self.resolution):
+            for y in range(0,self.resolution):
+                lowerLimit = self.GetPosition(x,y, source_dimensions)
+                upperLimit = self.GetPosition(x+1,y+1, source_dimensions)
+                #print(lowerLimit, upperLimit)
+                if self.checkBounds(location, lowerLimit, upperLimit, (1,1,0)):
+                    return x * self.resolution + y
+        raise Exception("Location out of bounds", location) 
+
+    def indexOf(iterable, element):
+        i = 0
+        for el in iterable:
+            if el == element:
+                return i
+            i+=1
+        return -1
+
+
+    def prepareSource(self):
+        ## prepare source ...
+        bpy.ops.object.duplicate_move()
+        source = bpy.context.active_object
+        bpy.ops.object.modifier_add(type='EDGE_SPLIT')
+        bpy.context.object.modifiers["EdgeSplit"].split_angle = 0
+        bpy.ops.object.modifier_apply(modifier="EdgeSplit")
+        return source
+
+
+
+#region implementation of operator
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        
+        if len(bpy.context.selected_objects) != 1:
+            self.report({'ERROR'},"please select one object to split")
+            return {'CANCELLED'}
+        else:
+            return wm.invoke_props_dialog(self)
+
+    def execute(self, context):
+
+        #create instance of terrain
+        source = self.prepareSource()
+
+        targetObjects = []
+        targetData = {}
+
+        dimensions = Vector(source.dimensions)
+        dimensions.x = ceil(dimensions.x)
+        dimensions.y = ceil(dimensions.y)
+        dimensions.z = ceil(dimensions.z)
+
+        wm = bpy.context.window_manager
+
+        try:
+            progress = 0
+            for f in source.data.polygons:
+                i = self.getTargetObjectIndexForLocation(source.location, dimensions, f.center, self.resolution)
+                targetData[f.index] = i
+                
+            self.report({'INFO'},"creating instances data")
+            for toIdx in range(self.resolution*self.resolution):
+                
+                self.report({'INFO'}, "created " + str(toIdx) + " of " + str(self.resolution*self.resolution))
+                targetObject = self.duplicateObject(source.name+"_"+str(toIdx), source)
+                targetObjects.append(targetObject)
+                # toggle edit mode
+
+                bpy.context.scene.objects.active = targetObject
+                targetObject.select = True
+
+                bpy.context.tool_settings.mesh_select_mode = [True, False, False]
+
+                bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+                bpy.ops.mesh.select_all(action = 'DESELECT')
+                bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+                
+                for p in targetObject.data.polygons:
+                    for vIdx in p.vertices:
+                        targetObject.data.vertices[vIdx].select = targetData[p.index] != toIdx
+
+
+                bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+                bpy.ops.mesh.delete(type="VERT")
+                bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+
+                targetObject.select = False
+                
+        except Exception as e:
+            for o in targetObjects:
+                o.select = True
+            source.select = False
+            bpy.ops.object.delete()
+            source.select = True
+            
+            raise e
+        finally:
+            bpy.context.scene.objects.active = source
+            source.select = True
+            bpy.ops.object.delete()
+        return {'FINISHED'}
+    
+## end of class TerrainSplit
+
+
+###
+### start addon implementation
+###
+
+bl_info = {"name": "Terrain Split", "category": "Object"}
+def register():
+    bpy.utils.register_class(TerrainSplit)
+
+def unregister():
+    bpy.utils.unregister_class(TerrainSplit)
+###
+###end addon implementation
+###
+
+if __name__ == "__main__":
+    register()

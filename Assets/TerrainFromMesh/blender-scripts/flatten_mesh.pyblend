@@ -1,0 +1,85 @@
+import bpy
+import bmesh
+from math import *
+from mathutils import *
+from collections import deque
+import sys
+
+class Flatten(bpy.types.Operator):
+    bl_idname = "object.flatten"
+    bl_label = "Flatten Mesh"
+    bl_options = {"REGISTER", "UNDO"}
+    
+    #resolution = bpy.props.IntProperty(name="Resolution",default=4)
+     
+    
+#region implementation of operator
+
+    def invoke(self, context, event):
+        wm = context.window_manager
+        
+        if len(bpy.context.selected_objects) != 1:
+            self.report({'ERROR'},"please select one object to flatten")
+            return {'CANCELLED'}
+        else:
+            return wm.invoke_props_dialog(self)
+
+    def execute(self, context):
+
+        wm = bpy.context.window_manager
+        source = bpy.context.active_object
+        # switch to edit mode
+        bpy.ops.object.mode_set(mode='EDIT', toggle=False)
+        
+        # split object
+        bpy.ops.mesh.select_all(action='SELECT')
+        bpy.ops.mesh.quads_convert_to_tris()
+        bpy.ops.mesh.edge_split()
+        bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
+        
+        source = bpy.context.active_object
+        try:
+            progress = 0
+            bm = bmesh.new()
+            bm.from_mesh(source.data)
+            layer = bm.loops.layers.color[0]
+        
+            
+            for f in bm.faces:
+                color = Color((0,0,0))
+                i = 0.0
+                for l in f.loops:
+                    color = color + l[layer]
+                    i = i+1
+                color = color / i
+                for l in f.loops:
+                    l[layer] = color
+                
+            bm.to_mesh(source.data)
+            bm.free()
+            
+                
+        except Exception as e:
+            raise e
+        return {'FINISHED'}
+    
+## end of class Flatten
+
+
+###
+### start addon implementation
+###
+
+bl_info = {"name": "Flatten", "category": "Object"}
+def register():
+    bpy.utils.register_class(Flatten)
+
+def unregister():
+    bpy.utils.unregister_class(Flatten)
+###
+###end addon implementation
+###
+
+if __name__ == "__main__":
+    register()
+
